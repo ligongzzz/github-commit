@@ -21,7 +21,7 @@ receivers = ['userid@sjtu.edu.cn']
 
 # Hyper params
 user_id = 'ligongzzz'
-token = open('token.txt').read()
+token = open('token.txt').read().strip()
 SLEEP_TIME = 30
 MAX_GET_TIMES = 30
 
