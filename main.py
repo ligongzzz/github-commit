@@ -8,20 +8,8 @@ from email.mime.text import MIMEText
 from email.header import Header
 import logging
 
-# Config logging module.
-logger = logging.getLogger(__name__)
-logger.setLevel(level=logging.INFO)
-handler = logging.FileHandler("log.txt")
-handler.setLevel(logging.INFO)
-formatter = logging.Formatter(
-    '%(asctime)s - %(message)s')
-handler.setFormatter(formatter)
-logger.addHandler(handler)
-
-
 # Webhook Setup
 webhook_url = 'webhook_url'
-
 
 # SMTP Setup
 mail_host="smtp.sjtu.edu.cn"
@@ -39,6 +27,17 @@ SEND_EMAIL = True
 SEND_WEBHOOK = True
 
 
+# Config logging module.
+logger = logging.getLogger(__name__)
+logger.setLevel(level=logging.INFO)
+handler = logging.FileHandler("log.txt")
+handler.setLevel(logging.INFO)
+formatter = logging.Formatter(
+    '%(asctime)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
+
 class Commit():
     def __init__(self, repo, sha, author, time, message):
         self.repo = repo
@@ -46,6 +45,7 @@ class Commit():
         self.author = author
         self.time = time
         self.message = message
+
 
 def get_latest_commit(repo: str):
     '''
