@@ -101,9 +101,9 @@ def send_email_messages(new_commits):
         smtpObj.sendmail(sender, receivers, message.as_string())
         print('Email send succesfully.')
         logger.info('Email send.')
-    except smtplib.SMTPException:
+    except Exception as err:
         print('Error.')
-        logger.info('Error when sending email.')
+        logger.info(err)
 
 def main_loop():
     commit_dict = {}
