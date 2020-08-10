@@ -18,7 +18,11 @@ formatter = logging.Formatter(
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
- 
+
+# Webhook Setup
+webhook_url = 'webhook_url'
+
+
 # SMTP Setup
 mail_host="smtp.sjtu.edu.cn"
 mail_user="userid"
@@ -30,6 +34,9 @@ receivers = ['userid@sjtu.edu.cn']
 # Hyper params
 SLEEP_TIME = 30
 MAX_GET_TIMES = 30
+
+SEND_EMAIL = True
+SEND_WEBHOOK = True
 
 
 class Commit():
@@ -79,6 +86,26 @@ def get_latest_commit(repo: str):
     return Commit(repo, commit_list['sha'], commit_list['commit']['committer']['name'], 
                     commit_list['commit']['committer']['date'], 
                     commit_list['commit']['message'])
+
+
+def send_webhook_messages(new_commits):
+    msg_to_send = f'共有{len(new_commits)}个新的提交。\n\n'
+
+    for commit in new_commits:
+        msg_to_send += f'仓库:{commit.repo}\n提交者:{commit.author}\n提交信息:{commit.message}\n提交时间:{commit.time}\n\n'
+
+    program = {
+        "msgtype": "text",
+        "text": {"content": msg_to_send},
+        }
+    headers = {'Content-Type': 'application/json'}
+    try:
+        requests.post(webhook_url, data=json.dumps(program), headers=headers)
+        print('Webhook send.')
+        logger.info('Webhook send.')
+    except Exception as err:
+        print(err)
+        logger.info(err)
 
 
 def send_email_messages(new_commits):
@@ -137,16 +164,19 @@ def main_loop():
         logger.info(f'Finished. {len(new_commit_list)} found.')
 
         if len(new_commit_list) > 0:
-            print('Sending emails...')
-            logger.info('Sending email...')
+            print('Sending...')
+            logger.info('Sending...')
 
             try:
-                send_email_messages(new_commit_list)
+                if SEND_EMAIL:
+                    send_email_messages(new_commit_list)
+                if SEND_WEBHOOK:
+                    send_webhook_messages(new_commit_list)
                 print('Finished!')
                 logger.info('Finished!')
             except Exception as err:
                 print(err)
-                logger.info('Error when sending email.')
+                logger.info('Error when sending.')
 
         time.sleep(SLEEP_TIME)
     
