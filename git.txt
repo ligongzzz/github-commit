@@ -1,3 +1,0 @@
-https://github.com/ligongzzz/SJTU-OJ.git
-https://github.com/ligongzzz/OJ-APP.git
-https://github.com/ligongzzz/github-commit.git

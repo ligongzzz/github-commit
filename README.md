@@ -1,6 +1,8 @@
 # GitHub Commit Email Sender
 Automatically scanning the repos in `git.txt` with GitHub REST API and send emails to you when finding new commits.
 
+You need to get a github token and save it in `token.txt` to use the GitHub REST API.
+
 ## Email Setup
 设置电子邮件SMTP服务地址，收件人与发件人信息。设置`SEND_EMAIL`为`True`。
 

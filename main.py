@@ -20,6 +20,8 @@ sender = 'userid@sjtu.edu.cn'
 receivers = ['userid@sjtu.edu.cn']
 
 # Hyper params
+user_id = 'ligongzzz'
+token = open('token.txt').read()
 SLEEP_TIME = 30
 MAX_GET_TIMES = 30
 
@@ -65,9 +67,13 @@ def get_latest_commit(repo: str):
     get_times = 0
     while True:
         try:
-            response = requests.get(get_url)
+            s = requests.session()
+            s.auth = (user_id, token)
+            response = s.get(get_url)
+            print(f'Remain request time:', response.headers['X-RateLimit-Remaining'])
+            logger.info(f'Remain request time: ' + response.headers['X-RateLimit-Remaining'])
             break
-        except Exception:
+        except Exception as err:
             get_times += 1
             if get_times > MAX_GET_TIMES:
                 print('Get times exceeds limit.')
@@ -79,7 +85,14 @@ def get_latest_commit(repo: str):
             time.sleep(3)
 
     # print(response.content)
-    commit_list = json.loads(response.content)[0]
+    try:
+        commit_list = json.loads(response.content)[0]
+    except Exception as err:
+        print(err)
+        logger.info(err)
+        logger.info(response.content)
+        raise RuntimeError()
+
     print('Commit:', commit_list['sha'])
     logger.info('Commit: ' + commit_list['sha'])
 
