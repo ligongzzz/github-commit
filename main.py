@@ -116,6 +116,7 @@ def main_loop():
         new_commit_list = []
         with open('git.txt') as f:
             for line in f.readlines():
+                line = line.strip()
                 if commit_dict.get(line) is None:
                     commit_dict[line] = ''
                 
