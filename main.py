@@ -138,10 +138,12 @@ def main_loop():
 
         if len(new_commit_list) > 0:
             print('Sending emails...')
+            logger.info('Sending email...')
 
             try:
                 send_email_messages(new_commit_list)
                 print('Finished!')
+                logger.info('Finished!')
             except Exception as err:
                 print(err)
                 logger.info('Error when sending email.')
