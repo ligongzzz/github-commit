@@ -154,24 +154,29 @@ def main_loop():
 
     while True:
         new_commit_list = []
-        with open('git.txt') as f:
-            for line in f.readlines():
-                line = line.strip()
-                if commit_dict.get(line) is None:
-                    commit_dict[line] = ''
-                
-                # Check the git.
-                try:
-                    latest_commit = get_latest_commit(line)
-                    if latest_commit.sha != commit_dict[line]:
-                        # Found new commit!
-                        commit_dict[line] = latest_commit.sha
-                        new_commit_list.append(latest_commit)
+        try:
+            with open('git.txt') as f:
+                for line in f.readlines():
+                    line = line.strip()
+                    if commit_dict.get(line) is None:
+                        commit_dict[line] = ''
+                    
+                    # Check the git.
+                    try:
+                        latest_commit = get_latest_commit(line)
+                        if latest_commit.sha != commit_dict[line]:
+                            # Found new commit!
+                            commit_dict[line] = latest_commit.sha
+                            new_commit_list.append(latest_commit)
 
-                except Exception as err:
-                    print(err)
-                    logger.info(err)
-                    continue
+                    except Exception as err:
+                        print(err)
+                        logger.info(err)
+                        continue
+        except Exception as err:
+            print(err)
+            logger.info(err)
+            logger.info('Fatal error.')
 
         print(f'Finished. {len(new_commit_list)} found.')
         logger.info(f'Finished. {len(new_commit_list)} found.')
